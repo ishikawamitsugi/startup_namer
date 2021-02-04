@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
- 
+
 void main() => runApp(MyApp());
- 
+
 class RandomWordsState extends State<RandomWords> {
-  
   final _suggestions = <WordPair>[];
   final _biggerFont = const TextStyle(fontSize: 16.0);
-  
+  final Set<WordPair> _save = Set<WordPair>(); // 重複を許さないList
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Startup Name Generator'),
       ),
       body: _buildSuggestions(),
-      );
+    );
   }
+
   Widget _buildSuggestions() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
@@ -30,20 +29,25 @@ class RandomWordsState extends State<RandomWords> {
           return _buildRow(_suggestions[index]);
         });
   }
+
   Widget _buildRow(WordPair pair) {
+    final bool alreadySaved = _save.contains(pair);
     return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
-      ),
-    );
+        title: Text(
+          pair.asPascalCase,
+          style: _biggerFont,
+        ),
+        trailing: Icon(
+          alreadySaved ? Icons.favorite : Icons.favorite_border,
+          color: alreadySaved ? Colors.red : null));
   }
 }
- 
+
 class RandomWords extends StatefulWidget {
   @override
   RandomWordsState createState() => RandomWordsState();
 }
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
